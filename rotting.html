@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      height: 100vh;
+      width: 100vw;
+      gap: 10px;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .item img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="grid">
+    <div class="item"><img src="images/stage1.png" alt=""></div>
+    <div class="item"><img src="images/stage2.png" alt=""></div>
+    <div class="item"><img src="images/stage3.png" alt=""></div>
+    <div class="item"><img src="images/stage4.png" alt=""></div>
+    <div class="item"><img src="images/stage5.png" alt=""></div>
+    <div class="item"><img src="images/stage6.png" alt=""></div>
+  </div>
+</body>
+</html>

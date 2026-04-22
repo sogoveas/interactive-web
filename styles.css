@@ -1,0 +1,11 @@
+body {
+    background-color: FDF2F2;
+    font-family: 'mynerve', sans-serif;
+    color: 3933FA;
+}
+
+
+@font-face {
+    font-family: 'mynerve';
+    src: url('fonts/Mynerve-Regular.ttf') format('truetype');
+}
