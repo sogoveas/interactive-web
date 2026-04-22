@@ -1,11 +1,68 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Document</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background-color: #FDF2F2;
+      cursor: url('images/butterkniferesize.cur'), url('images/butterknife.png'), crosshair;
+    }
+
+    .wrapper {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    img {
+      max-width: 100vw;
+      max-height: 100vh;
+      object-fit: contain;
+    }
+
+    .top-left-text {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+
+    .bottom-right-text {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: 'mynerve';
+      color: #3933FA;
+      font-size: 65px;
+    }
+
+    @font-face {
+      font-family: 'mynerve';
+      src: url('fonts/Mynerve-Regular.ttf') format('truetype');
+    }
+  </style>
 </head>
+
 <body>
-    
+
+<div class="wrapper">
+  <div class="top-left-text">
+    <h1>repurpose me</h1>
+  </div>
+
+  <img src="images/jambo.png" alt="">
+
+  <div class="bottom-right-text">
+    <h1>spread me</h1>
+  </div>
+</div>
+
 </body>
 </html>
