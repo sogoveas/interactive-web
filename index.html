@@ -1,12 +1,57 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f9e6e6;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .text a {
+      font-size: 48px;
+      margin-bottom: 10px;
+      font-family: 'mynerve';
+      text-decoration: none;
+      color: #3933FA;
+      cursor: pointer;
+    }
+
+    img {
+      width: 350px;
+      height: auto;
+      transform: rotate(50deg) translateX(50px);
+    }
+
+
+
+    @font-face {
+        font-family: 'mynerve';
+        src: url('fonts/Mynerve-Regular.ttf') format('truetype');
+    }
+  </style>
+
+  <title>Document</title>
 </head>
+
 <body>
-    <h1>slay</h1>
-    <img src="images/indexstrawberry.png" alt="">
+  <div class="container">
+    <div class="text">
+      <a href="rotting.html">click me</a>
+    </div>
+    <img src="images/indexstrawberryedit.png" alt="">
+  </div>
 </body>
 </html>
