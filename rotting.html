@@ -1,46 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="utf-8" />
+  <title>Rotting</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Mynerve&display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+
   <style>
     html, body {
-      height: 100%;
       margin: 0;
-      background-color: #FDF2F2;
+      padding: 0;
+      overflow: hidden;
+      background: #FDF2F2;
     }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(2, 1fr);
-      height: 100vh;
-      width: 100vw;
-      gap: 10px;
-    }
-
-    .item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .item img {
-      width: 60%;
-      height: 60%;
-      object-fit: contain;
+    canvas {
+      display: block;
     }
   </style>
-  <title>Rotting</title>
 </head>
 
 <body>
-  <div class="grid">
-    <div class="item"><a href="breadandjam.html"><img src="images/stage1.png" alt=""></a></div>
-    <div class="item"><a href="breadandjam.html"><img src="images/stage2.png" alt=""></a></div>
-    <div class="item"><a href="breadandjam.html"><img src="images/stage3.png" alt=""></a></div>
-    <div class="item"><a href="breadandjam.html"><img src="images/stage4.png" alt=""></a></div>
-    <div class="item"><a href="breadandjam.html"><img src="images/stage5.png" alt=""></a></div>
-    <div class="item"><a href="breadandjam.html"><img src="images/stage6.png" alt=""></a></div>
-  </div>
+  <script src="js/rotting.js"></script>
 </body>
-
 </html>

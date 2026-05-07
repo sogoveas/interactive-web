@@ -1,55 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Begin</title>
 
   <style>
     html, body {
-        height: 100%;
-        margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #f9e6e6;
+      height: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f9e6e6;
     }
 
     .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .text a {
-        font-size: 48px;
-        margin-bottom: 10px;
-        font-family: 'mynerve';
-        text-decoration: none;
-        color: #3933FA;
-        cursor: pointer;
+    .container a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .text {
+      font-size: 48px;
+      margin-bottom: 10px;
+      font-family: 'mynerve';
+      color: #3933FA;
     }
 
     img {
-        width: 350px;
-        height: auto;
-        transform: rotate(50deg) translateX(50px);
+      width: 350px;
+      height: auto;
+      transform: rotate(50deg) translateX(50px);
     }
 
     @font-face {
-        font-family: 'mynerve';
-        src: url('fonts/Mynerve-Regular.ttf') format('truetype');
+      font-family: 'mynerve';
+      src: url('fonts/Mynerve-Regular.ttf') format('truetype');
     }
   </style>
-  <title>Begin</title>
-
 </head>
 
 <body>
   <div class="container">
-    <div class="text">
-      <a href="rotting.html">click me</a>
-    </div>
-    <img src="images/indexstrawberryedit.png" alt="">
+    <a href="rotting.html">
+      <div class="text">click me</div>
+      <img src="images/indexstrawberryedit.png" alt="strawberry">
+    </a>
   </div>
 </body>
 </html>
