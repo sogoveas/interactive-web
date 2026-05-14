@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rotting</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: #FDF2F2;
+  font-family: 'mynerve', cursive;
+  overflow: hidden;
+}
+
+.scene {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.title {
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 32px;
+  color: #3933FA;
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.strawberry {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  transform: translate(-50%, -50%) rotate(50deg) translateX(30px);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.orbit-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.orbit-ring-1 {
+  width: min(38vw, 38vh);
+  height: min(38vw, 38vh);
+  border: 1.5px dashed #f0c0c0;
+}
+
+.orbit-ring-2 {
+  width: min(72vw, 72vh);
+  height: min(72vw, 72vh);
+  border: 1.5px dashed #b8d4b8;
+}
+
+@keyframes spin-cw  { to { transform: translate(-50%, -50%) rotate(360deg);  } }
+@keyframes spin-ccw { to { transform: translate(-50%, -50%) rotate(-360deg); } }
+@keyframes counter-cw  { to { transform: rotate(-360deg); } }
+@keyframes counter-ccw { to { transform: rotate(360deg);  } }
+
+.orbit-track {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+}
+
+.orbit-track-1 {
+  width: min(38vw, 38vh);
+  height: min(38vw, 38vh);
+  margin-left: calc(min(38vw, 38vh) / -2);
+  margin-top: calc(min(38vw, 38vh) / -2);
+  animation: spin-cw 22s linear infinite;
+}
+
+.orbit-track-2 {
+  width: min(72vw, 72vh);
+  height: min(72vw, 72vh);
+  margin-left: calc(min(72vw, 72vh) / -2);
+  margin-top: calc(min(72vw, 72vh) / -2);
+  animation: spin-ccw 34s linear infinite;
+}
+
+.orbit-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3933FA;
+  cursor: none;
+}
+
+.orbit-dot.recycle { background: #5a8a5a; }
+
+.spin-counter-1 { animation: counter-cw 22s linear infinite; }
+.spin-counter-2 { animation: counter-ccw 34s linear infinite; }
+
+.p0  { top: -5px; left: 50%; transform: translateX(-50%); }
+.p1  { top: 50%; right: -5px; transform: translateY(-50%); }
+.p2  { bottom: -5px; left: 50%; transform: translateX(-50%); }
+.p3  { top: 50%; left: -5px; transform: translateY(-50%); }
+
+.p4  { top: -5px; right: 14%; }
+.p5  { top: 14%; right: -5px; }
+.p6  { bottom: 14%; right: -5px; }
+.p7  { bottom: -5px; right: 14%; }
+.p8  { bottom: -5px; left: 14%; }
+.p9  { bottom: 14%; left: -5px; }
+.p10 { top: 14%; left: -5px; }
+.p11 { top: -5px; left: 14%; }
+
+.frozen-dot {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 50;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+.tooltip {
+  position: fixed;
+  pointer-events: none;
+  z-index: 100;
+  font-family: 'mynerve', cursive;
+  font-size: 15px;
+  color: #3933FA;
+  background: white;
+  border: 2px dashed #3933FA;
+  padding: 8px 14px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.tooltip.recycle {
+  color: #3a6a3a;
+  border-color: #5a8a5a;
+}
+
+.tooltip.visible { opacity: 1; }
+
+.cursor-dot {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3933FA;
+  pointer-events: none;
+  z-index: 200;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: multiply;
+}
+
+.hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 15px;
+  color: #aaa;
+  white-space: nowrap;
+  pointer-events: none;
+  font-family: 'mynerve', cursive;
+}
+
+.continue-btn {
+  position: absolute;
+  bottom: 28px;
+  right: 40px;
+  padding: 10px 28px;
+  font-size: 20px;
+  font-family: 'mynerve', cursive;
+  background: white;
+  color: #3933FA;
+  border: 2px dashed #3933FA;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  border-radius: 2px;
+  z-index: 20;
+}
+
+.continue-btn:hover {
+  background: #3933FA;
+  color: white;
+  border-style: solid;
+  transform: scale(1.04);
+}
+
+.continue-btn:active {
+  transform: scale(0.97);
+}
+
+@font-face {
+  font-family: 'mynerve';
+  src: url('fonts/Mynerve-Regular.ttf') format('truetype');
+}
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="title">the life of a strawberry</div>
+
+  <div class="orbit-ring orbit-ring-1"></div>
+  <div class="orbit-ring orbit-ring-2"></div>
+
+  <img class="strawberry" src="images/indexstrawberryedit.png" alt="strawberry">
+
+  <div class="orbit-track orbit-track-1">
+    <div class="orbit-dot p0 spin-counter-1" data-text="rots in 2–3 days at room temp"></div>
+    <div class="orbit-dot p1 spin-counter-1" data-text="90% water content speeds decay"></div>
+    <div class="orbit-dot p2 spin-counter-1" data-text="botrytis mold is the #1 cause"></div>
+    <div class="orbit-dot p3 spin-counter-1" data-text="fridge extends life to ~7 days"></div>
+  </div>
+
+  <div class="orbit-track orbit-track-2">
+    <div class="orbit-dot recycle p4  spin-counter-2" data-text="compost enriches soil"></div>
+    <div class="orbit-dot recycle p5  spin-counter-2" data-text="nutrients feed new plants"></div>
+    <div class="orbit-dot recycle p6  spin-counter-2" data-text="worms break it down fast"></div>
+    <div class="orbit-dot recycle p7  spin-counter-2" data-text="water returns to the ground"></div>
+    <div class="orbit-dot recycle p8  spin-counter-2" data-text="carbon returns to the cycle"></div>
+    <div class="orbit-dot recycle p9  spin-counter-2" data-text="breaks down in ~4 weeks"></div>
+    <div class="orbit-dot recycle p10 spin-counter-2" data-text="feeds the next harvest"></div>
+    <div class="orbit-dot recycle p11 spin-counter-2" data-text="sunlight drives decomposition"></div>
+  </div>
+
+  <div class="hint">hover over the dots to learn more</div>
+  <button class="continue-btn" onclick="window.location.href='rotting.html'">Continue →</button>
+</div>
+
+<div class="frozen-dot" id="frozenDot"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+const tooltip   = document.getElementById('tooltip');
+const cursorDot = document.getElementById('cursorDot');
+const frozenDot = document.getElementById('frozenDot');
+
+let mouseX = 0, mouseY = 0;
+let activeDot   = null;
+let activeTrack = null;
+let frozenX = 0, frozenY = 0;
+
+const RADIUS = 28;
+
+function pauseTrack(dot) {
+  const track = dot.closest('.orbit-track');
+  const r = dot.getBoundingClientRect();
+  frozenX = r.left + r.width / 2;
+  frozenY = r.top  + r.height / 2;
+
+  frozenDot.style.left       = frozenX + 'px';
+  frozenDot.style.top        = frozenY + 'px';
+  frozenDot.style.background = dot.classList.contains('recycle') ? '#5a8a5a' : '#3933FA';
+  frozenDot.style.display    = 'block';
+
+  track.style.animationPlayState = 'paused';
+  track.querySelectorAll('.spin-counter-1, .spin-counter-2').forEach(el => {
+    el.style.animationPlayState = 'paused';
+  });
+
+  activeDot   = dot;
+  activeTrack = track;
+}
+
+function resumeTrack() {
+  if (!activeTrack) return;
+  activeTrack.style.animationPlayState = 'running';
+  activeTrack.querySelectorAll('.spin-counter-1, .spin-counter-2').forEach(el => {
+    el.style.animationPlayState = 'running';
+  });
+  frozenDot.style.display = 'none';
+  activeDot   = null;
+  activeTrack = null;
+  tooltip.className = 'tooltip';
+}
+
+function positionTooltip() {
+  const tipW = tooltip.offsetWidth;
+  const tipH = tooltip.offsetHeight;
+  let tx = mouseX + 16;
+  let ty = mouseY - tipH / 2;
+  if (tx + tipW > window.innerWidth  - 8) tx = mouseX - tipW - 16;
+  if (ty < 8) ty = 8;
+  if (ty + tipH > window.innerHeight - 8) ty = window.innerHeight - tipH - 8;
+  tooltip.style.left = tx + 'px';
+  tooltip.style.top  = ty + 'px';
+}
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+
+  cursorDot.style.left = mouseX + 'px';
+  cursorDot.style.top  = mouseY + 'px';
+
+  if (activeDot) {
+    const dist = Math.hypot(mouseX - frozenX, mouseY - frozenY);
+    if (dist > RADIUS) {
+      resumeTrack();
+      return;
+    }
+    positionTooltip();
+    return;
+  }
+
+  let closest     = null;
+  let closestDist = Infinity;
+
+  document.querySelectorAll('.orbit-dot').forEach(dot => {
+    const r  = dot.getBoundingClientRect();
+    const cx = r.left + r.width  / 2;
+    const cy = r.top  + r.height / 2;
+    const dist = Math.hypot(mouseX - cx, mouseY - cy);
+    if (dist < RADIUS && dist < closestDist) {
+      closestDist = dist;
+      closest = dot;
+    }
+  });
+
+  if (closest) {
+    pauseTrack(closest);
+    const isRecycle = closest.classList.contains('recycle');
+    tooltip.textContent = closest.dataset.text;
+    tooltip.className   = 'tooltip visible' + (isRecycle ? ' recycle' : '');
+    positionTooltip();
+  }
+});
+
+document.addEventListener('mouseleave', resumeTrack);
+</script>
+
+</body>
+</html>

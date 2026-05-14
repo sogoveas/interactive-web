@@ -1,13 +1,57 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Jam Spread</title>
+<head>
+  <meta charset="utf-8" />
+  <title>Jam Spread</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-  </head>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
 
-  <body style="margin:0;">
-    <script src="js/jam-spread.js"></script>
-  </body>
+  <style>
+    @font-face {
+      font-family: 'mynerve';
+      src: url('fonts/Mynerve-Regular.ttf') format('truetype');
+    }
+
+    body {
+      margin: 0;
+      background: #FDF2F2;
+    }
+
+    .restart-btn {
+      position: fixed;
+      bottom: 28px;
+      left: 28px;
+
+      padding: 12px 32px;
+      font-size: 22px;
+      font-family: 'mynerve', cursive;
+      background: white;
+      color: #3933FA;
+      border: 2px dashed #3933FA;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
+      border-radius: 2px;
+      z-index: 20;
+      text-decoration: none;
+    }
+
+    .restart-btn:hover {
+      background: #3933FA;
+      color: white;
+      border-style: solid;
+      transform: scale(1.04);
+    }
+
+    .restart-btn:active {
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+
+<body>
+  <a href="index.html" class="restart-btn">restart</a>
+
+  <script src="js/jam-spread.js"></script>
+</body>
 </html>

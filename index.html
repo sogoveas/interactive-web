@@ -1,60 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Begin</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Begin</title>
 
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #FDF2F2;
-    }
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #FDF2F2;
+  font-family: 'mynerve';
+}
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-    .container a {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-decoration: none;
-      cursor: pointer;
-    }
+.text {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #3933FA;
+}
 
-    .text {
-      font-size: 48px;
-      margin-bottom: 10px;
-      font-family: 'mynerve';
-      color: #3933FA;
-    }
+.letters, .slots {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
 
-    img {
-      width: 350px;
-      height: auto;
-      transform: rotate(50deg) translateX(50px);
-    }
+.letter, .slot {
+  width: 55px;
+  height: 55px;
+  border: 2px dashed #3933FA;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 26px;
+  background: white;
+  transition: all 0.2s ease;
+}
 
-    @font-face {
-      font-family: 'mynerve';
-      src: url('fonts/Mynerve-Regular.ttf') format('truetype');
-    }
-  </style>
+.letter {
+  cursor: pointer;
+  border-style: solid;
+}
+
+.letter:hover:not(.correct):not(.used) {
+  background: #f0efff;
+  transform: scale(1.08);
+}
+
+.slot.filled {
+  border-style: solid;
+}
+
+.slot:hover:not(.locked) {
+  background: #f0efff;
+  cursor: pointer;
+}
+
+.correct {
+  background: #dedcdc;
+  color: #888;
+  cursor: default;
+  transform: scale(0.95);
+}
+
+.used {
+  opacity: 0.3;
+  cursor: default;
+  transform: scale(0.95);
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 28px;
+  font-size: 20px;
+  font-family: 'mynerve';
+  background: white;
+  color: #3933FA;
+  border: 2px dashed #3933FA;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  display: none;
+}
+
+button:hover {
+  background: #3933FA;
+  color: white;
+  border-style: solid;
+  transform: scale(1.04);
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+img {
+  width: 300px;
+  margin-top: 20px;
+  transform: rotate(50deg) translateX(50px);
+}
+
+@font-face {
+  font-family: 'mynerve';
+  src: url('fonts/Mynerve-Regular.ttf') format('truetype');
+}
+</style>
 </head>
 
 <body>
-  <div class="container">
-    <a href="rotting.html">
-      <div class="text">click me</div>
-      <img src="images/indexstrawberryedit.png" alt="strawberry">
-    </a>
-  </div>
+
+<div class="container">
+  <div class="text">Unscramble to continue</div>
+
+  <div class="letters" id="letters"></div>
+  <div class="slots" id="slots"></div>
+
+  <button id="continueBtn" onclick="goNext()">Continue →</button>
+
+  <img src="images/indexstrawberryedit.png" alt="strawberry">
+</div>
+
+<script>
+const word = "CLICKME";
+const lettersContainer = document.getElementById("letters");
+const slotsContainer = document.getElementById("slots");
+const continueBtn = document.getElementById("continueBtn");
+
+let dragged = null;
+let letterElements = [];
+let slotElements = [];
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+// Find the next empty (non-locked) slot
+function getNextEmptySlot() {
+  return slotElements.find(s => !s.dataset.letter && !s.classList.contains('locked'));
+}
+
+// Find the last filled (non-locked) slot
+function getLastFilledSlot() {
+  const filled = slotElements.filter(s => s.dataset.letter && !s.classList.contains('locked'));
+  return filled[filled.length - 1] || null;
+}
+
+function createLetter(letter) {
+  const div = document.createElement("div");
+  div.classList.add("letter");
+  div.textContent = letter;
+  div.draggable = true;
+  div.dataset.letter = letter;
+
+  div.addEventListener("dragstart", () => { dragged = div; });
+
+  // Click to place in next empty slot
+  div.addEventListener("click", () => {
+    if (div.classList.contains("correct") || div.classList.contains("used")) return;
+    const slot = getNextEmptySlot();
+    if (!slot) return;
+
+    placeLetter(div, slot);
+  });
+
+  return div;
+}
+
+function placeLetter(letterEl, slot) {
+  const slotIndex = slotElements.indexOf(slot);
+
+  letterEl.classList.add("used");
+  letterEl.draggable = false;
+
+  slot.textContent = letterEl.dataset.letter;
+  slot.dataset.letter = letterEl.dataset.letter;
+  slot.dataset.source = letterEl.dataset.letter + "_" + Array.from(lettersContainer.children).indexOf(letterEl);
+  slot.classList.add("filled");
+  slot._letterEl = letterEl;
+
+  // Click a filled (non-locked) slot to return the letter
+  slot.onclick = () => {
+    if (slot.classList.contains("locked")) return;
+    returnLetter(slot);
+  };
+
+  checkSlot(slot, slotIndex);
+  checkAnswer();
+}
+
+function returnLetter(slot) {
+  const letterEl = slot._letterEl;
+  if (letterEl) {
+    letterEl.classList.remove("used");
+    letterEl.draggable = true;
+  }
+
+  slot.textContent = "";
+  slot.dataset.letter = "";
+  slot.classList.remove("filled");
+  slot._letterEl = null;
+  slot.onclick = null;
+
+  checkAnswer();
+}
+
+function checkSlot(slot, index) {
+  if (word[index] === slot.dataset.letter) {
+    slot.classList.add("locked");
+    slot.style.background = "#dedcdc";
+    slot.style.color = "#888";
+    if (slot._letterEl) slot._letterEl.style.display = "none";
+    slot.onclick = null;
+  }
+}
+
+function checkAnswer() {
+  const attempt = slotElements.map(s => s.dataset.letter || "").join("");
+  continueBtn.style.display = attempt === word ? "block" : "none";
+}
+
+shuffle(word.split("")).forEach((letter, i) => {
+  const div = createLetter(letter);
+  div.dataset.index = i;
+  lettersContainer.appendChild(div);
+  letterElements.push(div);
+});
+
+word.split("").forEach((_, index) => {
+  const slot = document.createElement("div");
+  slot.classList.add("slot");
+  slot.dataset.letter = "";
+
+  slot.addEventListener("dragover", e => e.preventDefault());
+  slot.addEventListener("drop", e => {
+    e.preventDefault();
+    if (!dragged || dragged.classList.contains("correct") || dragged.classList.contains("used")) return;
+
+    if (slot.classList.contains("locked")) return;
+
+    if (slot._letterEl) returnLetter(slot);
+
+    slotElements.forEach(s => {
+      if (s._letterEl === dragged) returnLetter(s);
+    });
+
+    placeLetter(dragged, slot);
+  });
+
+  slotsContainer.appendChild(slot);
+  slotElements.push(slot);
+});
+
+lettersContainer.addEventListener("dragover", e => e.preventDefault());
+lettersContainer.addEventListener("drop", e => {
+  e.preventDefault();
+  if (!dragged) return;
+  slotElements.forEach(s => {
+    if (s._letterEl === dragged) returnLetter(s);
+  });
+});
+
+function goNext() {
+  window.location.href = "about.html";
+}
+</script>
+
 </body>
 </html>
